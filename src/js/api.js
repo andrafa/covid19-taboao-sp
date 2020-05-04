@@ -7,7 +7,7 @@ const cidade	= document.querySelector('#ts__cidade');
 
 const corpo = document.getElementById('corpo');
 
-let hora 		=  22 // new Date().getHours();
+let hora 		=  new Date().getHours();
 let corFont = '';
 
 if (hora >= 05 && hora <= 17) {
