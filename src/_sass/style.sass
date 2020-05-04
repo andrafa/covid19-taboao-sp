@@ -1,0 +1,79 @@
+$cLight: rgba(34,0,0,1)
+$cDark: rgba(255,255,255,1)
+
+$corPrimaria: #ff001f
+
+$bgDark: #131522
+
+\:root
+  font:
+    size: 12px
+    family: 'Ubuntu', sans-serif
+
+*
+  margin: 0
+  padding: 0
+
+#corpo
+  color: $cLight
+
+a
+  color: $corPrimaria
+
+h1
+  font-size: 3.15rem
+h2
+  font-size: 2.36rem
+h3
+  font-size: 1.77rem
+h4
+  font-size: 1.33rem
+h5
+  font-size: 1rem
+h6
+  font-size: .75rem
+
+p, h1, h2, h3,
+h4, h5, h6
+  color: $cLight
+
+.pad
+  &__p
+    padding:
+      top: 2rem
+      bottom: 2rem
+  &__m
+    padding: 
+      top: 3rem
+      bottom: 3rem
+
+.rotulo
+  opacity: .7
+  font-weight: normal
+
+.legenda
+  text-align: center
+  line-height: 2
+  padding: 2rem 0
+
+
+.noite
+  color: $cDark
+  background: $bgDark
+
+  p, h1, h2, h3,
+  h4, h5, h6
+    color: $cDark
+
+  .cx__chart
+    background: lighten($bgDark, 3)
+    border: 1px solid rgba(106, 147, 191, 0.1)
+    border-radius: 8px
+    padding: 1rem
+    box-shadow: 0 5px 44px 0 darken($bgDark, 2)
+
+.cx__chart
+  border: 1px solid rgba(106, 147, 191, 0.1)
+  border-radius: 8px
+  padding: 1rem
+  box-shadow: 0 5px 44px 0 rgba(106, 147, 191, 0.102)

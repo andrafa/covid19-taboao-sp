@@ -1,0 +1,94 @@
+:root {
+  font-size: 12px;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+#corpo {
+  color: #220000;
+}
+
+a {
+  color: #ff001f;
+}
+
+h1 {
+  font-size: 3.15rem;
+}
+
+h2 {
+  font-size: 2.36rem;
+}
+
+h3 {
+  font-size: 1.77rem;
+}
+
+h4 {
+  font-size: 1.33rem;
+}
+
+h5 {
+  font-size: 1rem;
+}
+
+h6 {
+  font-size: .75rem;
+}
+
+p, h1, h2, h3,
+h4, h5, h6 {
+  color: #220000;
+}
+
+.pad__p {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.pad__m {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.rotulo {
+  opacity: .7;
+  font-weight: normal;
+}
+
+.legenda {
+  text-align: center;
+  line-height: 2;
+  padding: 2rem 0;
+}
+
+.noite {
+  color: white;
+  background: #131522;
+}
+
+.noite p, .noite h1, .noite h2, .noite h3,
+.noite h4, .noite h5, .noite h6 {
+  color: white;
+}
+
+.noite .cx__chart {
+  background: #181b2c;
+  border: 1px solid rgba(106, 147, 191, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  -webkit-box-shadow: 0 5px 44px 0 #0f111b;
+          box-shadow: 0 5px 44px 0 #0f111b;
+}
+
+.cx__chart {
+  border: 1px solid rgba(106, 147, 191, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  -webkit-box-shadow: 0 5px 44px 0 rgba(106, 147, 191, 0.102);
+          box-shadow: 0 5px 44px 0 rgba(106, 147, 191, 0.102);
+}

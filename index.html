@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="src/css/bootstrap-grid.min.css">
+	<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;700&display=swap" rel="stylesheet"> 
+	<link rel="stylesheet" href="src/css/style.css">
+	<title>Taboão da Serra</title>
+</head>
+<body id="corpo">
+	<header class="container">
+		<div class="titulo mt-5 pl-4">
+			<p class="rotulo">Números da COVID-19</p>
+			<h1 id="">Taboão da Serra <span class="rotulo">- SP</span></h1>
+		</div>
+
+		<div class="row">
+			<div class="dados__ts col-lg-3 pad__m pl-5">
+				<p id="ts__data" class="rotulo">dd.mm.aa</p>
+				<h3 id="ts__cidade" class="pb-2">Cidade/ Estado</h3>
+				
+				<div class="d-flex">
+					<div class="dados__n pr-5">
+						<p class="rotulo">Confirmados</p>
+						<h4 id="ts__casos">000.000</h4>
+					</div>
+	
+					<div class="dados__n">
+						<p class="rotulo">Mortes</p>
+						<h4 id="ts__mortes">000.000</h4>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</header>
+
+	<section class="container">
+
+		<div class="cx__chart">
+			<div id="chart"></div>
+		</div>
+		<div class="legenda">
+			<p class="rotulo">
+				Os números de casos e mortes podem  ser maiores devido a subnotificações.
+			</p>
+			<p class="rotulo">Fonte: Secretarias de Saúde das Unidades Federativas, dados tratados por Álvaro Justen e colaboradores/<a href="https://brasil.io/" target="_black">Brasil.IO</a></p>
+		</div>
+		
+	</section>
+
+	<footer>
+
+	</footer>
+
+	<script src="src/js/api.js"></script>
+	<script src="src/js/apexcharts.js"></script>
+	<script src="src/js/jquery.js"></script>
+
+</body>
+</html>
