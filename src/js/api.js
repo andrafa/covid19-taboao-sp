@@ -1,12 +1,67 @@
+// Dados do Brasil
+const urlBr = 'https://brasil.io/api/dataset/covid19/caso/data?is_last=true&place_type=state';
+// Casos do Estado de São Paulo
+const urlSP = 'https://brasil.io/api/dataset/covid19/caso/data?is_last=true&place_type=state&state=SP';
+// Dados da cidade de Taboão da Serra
 const url = 'https://brasil.io/api/dataset/covid19/caso/data?state=SP&city=Tabo%C3%A3o+da+Serra';
 
-const dia 		= document.querySelector('#ts__data');
-const mortes 	= document.querySelector('#ts__mortes');
-const casos		= document.querySelector('#ts__casos');
-const cidade	= document.querySelector('#ts__cidade');
+const corpo 		= document.getElementById('corpo');
 
-const corpo = document.getElementById('corpo');
+// TS
+const dia 			= document.querySelectorAll('.data');
 
+const mortes 		= document.querySelector('#ts__mortes');
+const casos			= document.querySelector('#ts__casos');
+const cidade		= document.querySelector('#ts__cidade');
+
+// BR
+const mortesBr	= document.querySelector('#br__mortes');
+const casosBr 	= document.querySelector('#br__casos');
+
+// SP
+const mortesSP 	= document.querySelector('#sp__mortes');
+const casosSP		= document.querySelector('#sp__casos');
+
+function formataNumero(valor) { let n = new Intl.NumberFormat('pt-BR').format(valor); return n; }
+
+// Fetch Api BR
+fetch(urlBr)
+.then(rBr => rBr.json())
+.then((br) => {
+	let resultBr = br.results;
+	
+	let totalBr 	= [];
+	let tmBr 	= [];
+	
+	for(i = 0; i < resultBr.length; i++) {
+		let nC = resultBr[i].confirmed;
+		let nM = resultBr[i].deaths;
+
+		totalBr.push(nC);
+		tmBr.push(nM);
+	}
+
+	let somaCasos = totalBr.reduce((ant, pro) => ant + pro, 0);
+	let somaMortes = tmBr.reduce((ant, pro) => ant + pro, 0);
+
+	casosBr.innerHTML 	= formataNumero(somaCasos);
+	mortesBr.innerHTML 	= formataNumero(somaMortes);
+
+});
+
+// Fetch Api SP
+fetch(urlSP)
+.then(rSP => rSP.json())
+.then((sp) => {
+	let spCasos 				= sp.results[0].confirmed;
+	let spMortes 				= sp.results[0].deaths;
+	
+	casosSP.innerHTML 	= formataNumero(spCasos);
+	mortesSP.innerHTML 	= formataNumero(spMortes);
+	
+});
+
+// Modo noturo ou diurno
 let hora 		=  new Date().getHours();
 let corFont = '';
 
@@ -18,17 +73,20 @@ if (hora >= 05 && hora <= 17) {
 	corpo.classList.add('noite');
 }
 
+// Fetch API para Taboão
 fetch(url)
 .then(resp => resp.json())
-.then(function(d) {
+.then((d) => {
 	let dados = d.results;
 
 	// Resolve o problema com GMT negativo passando as horas
 	let h = dados[0].date + 'T00:00';
 
+	// Tratamento para a data de hoje
 	const hData 	= new Date(h);
 	const hAno		= hData.getFullYear();
 	const hDia		= hData.getDate();
+
 	const meses		= ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
 	const hMes		= hData.getMonth();
 	const mesNome	= meses[hMes];
@@ -38,14 +96,16 @@ fetch(url)
 	let tsMortes 	= dados[0].deaths;
 	let tsCasos		= dados[0].confirmed;
 	
-	dia.innerHTML 		= hoje;
-	mortes.innerHTML	= tsMortes;
-	casos.innerHTML 	= tsCasos;
-	cidade.innerHTML 	= tsCidade;
+	dia[1].innerHTML 		= hoje;	// Data para TS
+	dia[0].innerHTML 		= hoje;	// Data para SP
+	dia[2].innerHTML 		= hoje;	// Data para BR
+	mortes.innerHTML		= formataNumero(tsMortes);
+	casos.innerHTML 		= formataNumero(tsCasos);
+	cidade.innerHTML 		= tsCidade;
 
-	let dDia 			= [];
-	let nMortes 	= [];
-	let nCasos		= [];
+	let dDia 						= [];
+	let nMortes 				= [];
+	let nCasos					= [];
 
 	for(i = 0; i < dados.length; i++ ) {
 		dDia.push(dados[i].date);
