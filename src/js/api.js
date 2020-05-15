@@ -1,22 +1,16 @@
-// Dados do Brasil
-const urlBr = 'https://brasil.io/api/dataset/covid19/caso/data?is_last=true&place_type=state';
 // Casos do Estado de São Paulo
-const urlSP = 'https://brasil.io/api/dataset/covid19/caso/data?is_last=true&place_type=state&state=SP';
+const urlSP = 'https://brasil.io/api/dataset/covid19/caso/data?place_type=state&state=SP';
 // Dados da cidade de Taboão da Serra
 const url = 'https://brasil.io/api/dataset/covid19/caso/data?state=SP&city=Tabo%C3%A3o+da+Serra';
 
-const corpo 		= document.getElementById('corpo');
 
-// TS
+const corpo 		= document.getElementById('corpo');
 const dia 			= document.querySelectorAll('.data');
 
+// TS
 const mortes 		= document.querySelector('#ts__mortes');
 const casos			= document.querySelector('#ts__casos');
 const cidade		= document.querySelector('#ts__cidade');
-
-// BR
-const mortesBr	= document.querySelector('#br__mortes');
-const casosBr 	= document.querySelector('#br__casos');
 
 // SP
 const mortesSP 	= document.querySelector('#sp__mortes');
@@ -24,42 +18,18 @@ const casosSP		= document.querySelector('#sp__casos');
 
 function formataNumero(valor) { let n = new Intl.NumberFormat('pt-BR').format(valor); return n; }
 
-// Fetch Api BR
-fetch(urlBr)
-.then(rBr => rBr.json())
-.then((br) => {
-	let resultBr = br.results;
-	
-	let totalBr 	= [];
-	let tmBr 	= [];
-	
-	for(i = 0; i < resultBr.length; i++) {
-		let nC = resultBr[i].confirmed;
-		let nM = resultBr[i].deaths;
+function porcento(hoje, ontem) {
+	return String( Math.floor( (hoje - ontem)/ontem*100 ) ) + '%';
+}
 
-		totalBr.push(nC);
-		tmBr.push(nM);
+function porCento(hoje, ontem) {
+	let calculo =  Math.floor( (hoje - ontem)/ontem*100 );
+	if (calculo >= 0) {
+		return `<span class="crescimento" style="color: red;">${'▲ ' + calculo + '%'}</span>`;
+	} else {
+		return `<span class="crescimento" style="color: green;">${'▼ ' + calculo + '%'}</span>`;
 	}
-
-	let somaCasos = totalBr.reduce((ant, pro) => ant + pro, 0);
-	let somaMortes = tmBr.reduce((ant, pro) => ant + pro, 0);
-
-	casosBr.innerHTML 	= formataNumero(somaCasos);
-	mortesBr.innerHTML 	= formataNumero(somaMortes);
-
-});
-
-// Fetch Api SP
-fetch(urlSP)
-.then(rSP => rSP.json())
-.then((sp) => {
-	let spCasos 				= sp.results[0].confirmed;
-	let spMortes 				= sp.results[0].deaths;
-	
-	casosSP.innerHTML 	= formataNumero(spCasos);
-	mortesSP.innerHTML 	= formataNumero(spMortes);
-	
-});
+}
 
 // Modo noturo ou diurno
 let hora 		=  new Date().getHours();
@@ -72,6 +42,24 @@ if (hora >= 05 && hora <= 17) {
 	corFont = '#ffffff80';
 	corpo.classList.add('noite');
 }
+
+// Fetch Api SP
+fetch(urlSP)
+.then(rSP => rSP.json())
+.then((sp) => {
+	// dados do dia atual
+	let spCasos 				= sp.results[0].confirmed;
+	let spMortes 				= sp.results[0].deaths;
+	// dados do dia anterior
+	let spAntCasos 			= sp.results[1].confirmed;
+	let spAntMortes 		= sp.results[1].deaths;
+	
+	casosSP.innerHTML 	= formataNumero(spCasos)
+		+ porCento(spCasos, spAntCasos);
+	mortesSP.innerHTML 	= formataNumero(spMortes)
+		+ porCento(spMortes, spAntMortes);
+
+});
 
 // Fetch API para Taboão
 fetch(url)
@@ -93,16 +81,23 @@ fetch(url)
 
 	let hoje 			= `${hDia} ${mesNome} ${hAno}`;
 	let tsCidade	= dados[0].city;
+	// dados do dia atual
 	let tsMortes 	= dados[0].deaths;
 	let tsCasos		= dados[0].confirmed;
+	// dados do dia anterior
+	let tsAntMortes 	= dados[1].deaths;
+	let tsAntCasos		= dados[1].confirmed;
 	
 	dia[1].innerHTML 		= hoje;	// Data para TS
 	dia[0].innerHTML 		= hoje;	// Data para SP
-	dia[2].innerHTML 		= hoje;	// Data para BR
-	mortes.innerHTML		= formataNumero(tsMortes);
-	casos.innerHTML 		= formataNumero(tsCasos);
 	cidade.innerHTML 		= tsCidade;
 
+	casos.innerHTML 		= formataNumero(tsCasos)
+		+ porCento(tsCasos, tsAntCasos);
+	mortes.innerHTML		= formataNumero(tsMortes) 
+		+ porCento(tsMortes, tsAntMortes);
+	
+	
 	let dDia 						= [];
 	let nMortes 				= [];
 	let nCasos					= [];
@@ -111,7 +106,6 @@ fetch(url)
 		dDia.push(dados[i].date);
 		nMortes.push(dados[i].deaths);
 		nCasos.push(dados[i].confirmed);
-
 	}
 
 	var options = {
@@ -263,6 +257,31 @@ fetch(url)
 		grid: {
 			show: true,
 		},
+		title: {
+			text: 'Números de casos e mortes no munucipio de Taboão da Serra - SP',
+			align: 'center',
+			margin: 10,
+			offsetX: 0,
+			offsetY: 10,
+			floating: false,
+			style: {
+				fontSize:  '16px',
+				fontWeight:  'bold',
+				color:  corFont
+			},
+		},
+		subtitle: {
+      text: 'Os números apresentados podem ser maiores devido a subnotificações. ',
+      align: 'center',
+      margin: 10,
+      offsetX: 0,
+      offsetY: 40,
+      floating: false,
+      style: {
+        fontSize:  '12px',
+        color:  corFont
+      },
+  },
 		tooltip: {
       enabled: true,
       enabledOnSeries: undefined,

@@ -55,6 +55,12 @@ h4, h5, h6 {
   padding-bottom: 3rem;
 }
 
+.crescimento {
+  padding-left: .7rem;
+  font-size: 1rem;
+  font-weight: normal;
+}
+
 .rotulo {
   opacity: .7;
   font-weight: normal;
