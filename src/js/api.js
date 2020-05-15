@@ -179,10 +179,10 @@ fetch(url)
 					zoom: true,
 					zoomin: true,
 					zoomout: true,
-					pan: false,
+					pan: true,
 					reset: true | '<img src="/static/icons/reset.png" width="20">',
 				},
-				autoSelected: '' 
+				autoSelected: 'zoom' 
 				},
 			},
 			theme: {
@@ -205,7 +205,6 @@ fetch(url)
 		xaxis: {
 			type: 'datetime',
 			categories: dDia.reverse(),
-			
 			labels: {
 				datetimeFormatter: {
 						year: 'yyyy',
@@ -223,14 +222,24 @@ fetch(url)
 		},
 		yaxis: {
 			show: true,
-			seriesName: 'numeros',
-			min: 0,
-			tickAmount: 20,
+			seriesName: 'Logarithmic',
+			min: 1,
+      tickAmount: 8,
+      logarithmic: true,
 			labels: {
 				style: {
 					colors: corFont, // cor do texto do eixo Y.
 				},
 			},
+			title: {
+				text: 'Escala Logarítmica',
+			},
+			axisTicks: {
+        show: true
+      },
+      axisBorder: {
+        show: true,
+      },
 		},
 		dataLabels: {
 			enabled: false,
