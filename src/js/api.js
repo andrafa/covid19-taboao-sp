@@ -3,26 +3,24 @@ const urlSP = 'https://brasil.io/api/dataset/covid19/caso/data?place_type=state&
 // Dados da cidade de Taboão da Serra
 const url = 'https://brasil.io/api/dataset/covid19/caso/data?state=SP&city=Tabo%C3%A3o+da+Serra';
 
-
 const corpo 		= document.getElementById('corpo');
 const dia 			= document.querySelectorAll('.data');
 
-// TS
-const mortes 		= document.querySelector('#ts__mortes');
-const casos			= document.querySelector('#ts__casos');
-const cidade		= document.querySelector('#ts__cidade');
+const nomeMeses	=	['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+const abrMeses	= ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+const nomeDia		= ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+const abrDia		= ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
-// SP
-const mortesSP 	= document.querySelector('#sp__mortes');
-const casosSP		= document.querySelector('#sp__casos');
 
-function formataNumero(valor) { let n = new Intl.NumberFormat('pt-BR').format(valor); return n; }
-
-function porcento(hoje, ontem) {
-	return String( Math.floor( (hoje - ontem)/ontem*100 ) ) + '%';
+function documento(id) {
+	return document.querySelector(id);
 }
 
-function porCento(hoje, ontem) {
+function formataNumero(valor) { 
+	let n = new Intl.NumberFormat('pt-BR').format(valor); return n; 
+}
+
+function taxaCrescimento(hoje, ontem) {
 	let calculo =  Math.floor( (hoje - ontem)/ontem*100 );
 	if (calculo >= 0) {
 		return `<span class="crescimento" style="color: red;">${'▲ ' + calculo + '%'}</span>`;
@@ -30,6 +28,16 @@ function porCento(hoje, ontem) {
 		return `<span class="crescimento" style="color: green;">${'▼ ' + calculo + '%'}</span>`;
 	}
 }
+
+
+// TS
+const mortes 		= documento('#ts__mortes');
+const casos			= documento('#ts__casos');
+const cidade		= documento('#ts__cidade');
+
+// SP
+const mortesSP 	= documento('#sp__mortes');
+const casosSP		= documento('#sp__casos');
 
 // Modo noturo ou diurno
 let hora 		=  new Date().getHours();
@@ -55,9 +63,9 @@ fetch(urlSP)
 	let spAntMortes 		= sp.results[1].deaths;
 	
 	casosSP.innerHTML 	= formataNumero(spCasos)
-		+ porCento(spCasos, spAntCasos);
+		+ taxaCrescimento(spCasos, spAntCasos);
 	mortesSP.innerHTML 	= formataNumero(spMortes)
-		+ porCento(spMortes, spAntMortes);
+		+ taxaCrescimento(spMortes, spAntMortes);
 
 });
 
@@ -75,9 +83,8 @@ fetch(url)
 	const hAno		= hData.getFullYear();
 	const hDia		= hData.getDate();
 
-	const meses		= ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
 	const hMes		= hData.getMonth();
-	const mesNome	= meses[hMes];
+	const mesNome	= abrMeses[hMes];
 
 	let hoje 			= `${hDia} ${mesNome} ${hAno}`;
 	let tsCidade	= dados[0].city;
@@ -93,20 +100,21 @@ fetch(url)
 	cidade.innerHTML 		= tsCidade;
 
 	casos.innerHTML 		= formataNumero(tsCasos)
-		+ porCento(tsCasos, tsAntCasos);
+		+ taxaCrescimento(tsCasos, tsAntCasos);
 	mortes.innerHTML		= formataNumero(tsMortes) 
-		+ porCento(tsMortes, tsAntMortes);
+		+ taxaCrescimento(tsMortes, tsAntMortes);
 	
 	
 	let dDia 						= [];
 	let nMortes 				= [];
 	let nCasos					= [];
 
-	for(i = 0; i < dados.length; i++ ) {
-		dDia.push(dados[i].date);
-		nMortes.push(dados[i].deaths);
-		nCasos.push(dados[i].confirmed);
-	}
+	dados.forEach( (dado) => {
+		dDia.push(dado.date);
+		nMortes.push(dado.deaths);
+		nCasos.push(dado.confirmed);
+	});
+
 
 	var options = {
 		chart: {
@@ -115,51 +123,10 @@ fetch(url)
 				locales: [{
 					name: 'pt',
 					options: {
-						months: [
-							'Janeiro', 
-							'Fevereiro', 
-							'Março', 
-							'Abril', 
-							'Maio', 
-							'Junho', 
-							'Julho', 
-							'Agosto', 
-							'Setembro', 
-							'Outubro', 
-							'November', 
-							'December'
-						],
-						shortMonths: [
-							'Jan', 
-							'Fev', 
-							'Mar', 
-							'Abr', 
-							'Mai', 
-							'Jun', 
-							'Jul', 
-							'Ago', 
-							'Set', 
-							'Out', 
-							'Nov', 
-							'Dez'],
-						days: [
-							'Domingo', 
-							'Segunda', 
-							'Terça', 
-							'Quarta', 
-							'Quinta', 
-							'Sexta', 
-							'Sábado'
-						],
-						shortDays: [
-							'Dom', 
-							'Seg', 
-							'Ter', 
-							'Qua', 
-							'Qui', 
-							'Sex', 
-							'Sáb'
-					],
+						months: nomeMeses,
+						shortMonths: abrMeses,
+						days: nomeDia,
+						shortDays: abrDia,
 						toolbar: {
 							download: 'Download SVG',
 							selection: 'Seleção',
@@ -224,7 +191,8 @@ fetch(url)
 			show: true,
 			seriesName: 'Logarithmic',
 			min: 1,
-      tickAmount: 8,
+			max: 4000,
+      tickAmount: 10,
       logarithmic: true,
 			labels: {
 				style: {
@@ -233,6 +201,10 @@ fetch(url)
 			},
 			title: {
 				text: 'Escala Logarítmica',
+				style: {
+					color: corFont,
+					fontWeight: 'normal'
+				}
 			},
 			axisTicks: {
         show: true
